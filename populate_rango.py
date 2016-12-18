@@ -61,7 +61,7 @@ def populate():
             print "{0} - {1}".format(str(category), str(page))
 
 
-def add_cat(category_name, views=0, likes=0):
+def add_cat(category_name):
     category = Category.objects.get_or_create(name=category_name)[0]
 
     if category_name == 'Django':
