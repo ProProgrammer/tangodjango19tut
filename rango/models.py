@@ -8,7 +8,12 @@ class Category(models.Model):
     name = models.CharField(max_length=128, unique=True)
     views = models.IntegerField(default=0)
     likes = models.IntegerField(default=0)
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)
+    """
+    We could have added the unique constraint earlier but if we performed the migration and set everything to be an
+    emtpy string by default, it would have raised an error as the unique constraint would have been violated
+    We could have deleted the database and then recreated everything - but that's not always desirable
+    """
 
     # We defined the slug field that we will use with function slugify to replace whitespace with hyphens
     # Eg - 'how do i create a slug in django' turns into 'how-do-i-create-a-slug-in-django'
