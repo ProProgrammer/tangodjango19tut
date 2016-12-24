@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-from rango.models import Category
+from rango.models import Category, Page
 
 
 def index(request):
@@ -25,3 +25,42 @@ def index(request):
 def about(request):
     context_dict = {'boldmessage': 'This tutorial has been put together by Deep Sukhwani'}
     return render(request, 'rango/about.html', context=context_dict)
+
+
+def show_category(request, category_name_slug):
+    # Create a context dictionary which we can pass to the template rendering engine
+    context_dict = {}
+
+    try:
+        # Can we find a category name slug with the given name?
+        # If we can't, the .get() method raises a DoesNotExist exception.
+        # So the .get() method returns on method instance or raises an exception
+        category = Category.objects.get(slug=category_name_slug)
+
+        # Retrieve all associated pages
+        # Note that filter() will return a list of page objects or an empty list
+        pages = Page.objects.filter(category=category)
+
+        # Add our results list to the template context dictionary under name pages
+        context_dict['pages'] = pages
+
+        # We also add category object from the database to the context dictionary.
+        # We will use this in the template to verify the category exists
+        context_dict['category'] = category
+
+    except Category.DoesNotExist:
+        # We get here if we didn't find the specified category (i.e. - the category name slug requested was invalid)
+        # Don't do anything - the template will display "no category" message for us
+
+        context_dict['category'] = None
+        context_dict['pages'] = None
+
+    # Go render the response and return it to the client
+    return render(request, 'rango/category.html', context=context_dict)
+
+"""
+All view functions defined as part of a Django application must take at least one parameter. This is typically called
+request and provides access to information related to the given HTTP request made by the user.
+When parameterizing URLs, you supply additional named parameters to the signature for the given view.
+That is why our show_category() view was defined as def show_category(request, category_name_slug).
+"""
