@@ -1,5 +1,6 @@
-from django.http import HttpResponse
 from django.shortcuts import render
+
+from rango.forms import CategoryForm
 from rango.models import Category, Page
 
 
@@ -61,9 +62,40 @@ def show_category(request, category_name_slug):
     # Go render the response and return it to the client
     return render(request, 'rango/category.html', context=context_dict)
 
+
 """
 All view functions defined as part of a Django application must take at least one parameter. This is typically called
 request and provides access to information related to the given HTTP request made by the user.
 When parameterizing URLs, you supply additional named parameters to the signature for the given view.
 That is why our show_category() view was defined as def show_category(request, category_name_slug).
 """
+
+
+def add_category(request):
+    form = CategoryForm()
+
+    # A HTTP POST?
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+
+        # Have we been provided with a valid form?
+
+        if form.is_valid():
+            # Save the new category to the database
+            form.save(commit=True)
+
+            # Now that the category is saved, we could give a confirmation message
+            # But since the most recent category added is on the index page
+            # Then we can direct the user back to the index page
+            return index(request)
+
+        else:
+            # The supplied form contained errors
+            # Just print them to the terminal.
+
+            print form.errors
+
+    # Will handle the bad form, new form or no form supplied cases.
+    # Render the form with error messages (if any)
+
+    render(request, 'rango/add_category.html', {'form': form})
