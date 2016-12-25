@@ -1,7 +1,6 @@
 from django.conf.urls import url
 from rango import views
 
-
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^about/$', views.about, name='about'),
@@ -15,6 +14,11 @@ There are two things to note here.
 First we have added a parameter name within the URL pattern, i.e. <category_name_slug>, which we will be able to
 access in our view later on. When you create a parameterized URL you need to ensure that the parameters that you
 include in the URL are declared in the corresponding view.
+
+Using parentheses around a pattern "captures" the text matched by that pattern and sends it as an argument to the
+view function; ?P<category_name_slug> defines the name that will be used to identify the matched pattern.
+
+Also [0-9]+ is a regular expression to match a sequence of digits (i.e., a number).
 
 The next thing to note is that the regular expression [\w\-]+) will look for any sequence of alphanumeric characters
 e.g. a-z, A-Z or 0-9 denoted by \w and any hyphens (-) denoted by \-, and we can match as many of these as we link
