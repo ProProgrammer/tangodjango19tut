@@ -53,7 +53,7 @@ def populate():
     for cat, cat_data in cats.iteritems():
         user_category = add_cat(cat)
         for user_page in cat_data["pages"]:
-            add_page(user_category, user_page["title"], user_page["url"])
+            add_page(user_category, user_page["title"], user_page["url"], 15)
 
     # Print out the categories and their pages we have added
     for category in Category.objects.all():

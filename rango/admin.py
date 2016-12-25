@@ -31,7 +31,7 @@ class PageAdmin(admin.ModelAdmin):
         return obj.url
 
     page_url.short_description = 'URL'
-    list_display = ['title', 'category', 'page_url']
+    list_display = ['title', 'category', 'page_url', 'views']
     list_filter = ['category']
 
 

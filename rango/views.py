@@ -16,7 +16,10 @@ def index(request):
     # If we removed the `-` and kept it just `likes` it would return it in ascending order
     # The [:5] is to return the first five items only (index 0 through 4)
 
-    context_dict = {'categories': category_list}
+    pages_list = Page.objects.order_by('-views')[:5]
+
+    context_dict = {'categories': category_list,
+                    'pages': pages_list}
 
     # Render the response and send it back!
     return render(request, 'rango/index.html', context=context_dict)

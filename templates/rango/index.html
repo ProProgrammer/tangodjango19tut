@@ -28,6 +28,17 @@
     {% endif %}
 </div>
 <div>
+    {% if pages %}
+        <ul>
+            {% for page in pages %}
+                <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <strong>No Pages added for any category</strong>
+    {% endif %}
+</div>
+<div>
     <a href="/rango/about">About</a><br/>
     <img src="{% static "images/pirate-ship.jpg" %}"
          alt="Picture of a Pirate Ship"/>
