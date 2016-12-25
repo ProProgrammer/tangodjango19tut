@@ -21,7 +21,7 @@
     {% if categories %}
     <ul>
         {% for category in categories %}
-        <li><a href="{% url 'show_category' category.slug %}">{{ category.name }}</a> -
+        <li><a href="{% url 'rango:show_category' category.slug %}">{{ category.name }}</a> -
             {{ category.likes }}</li>
         {% endfor %}
     </ul>
@@ -42,7 +42,7 @@
     {% endif %}
 </div>
 <div>
-    <a href="{% url 'about' %}">About</a><br/>
+    <a href="{% url 'rango:about' %}">About</a><br/>
     <img src="{% static "images/pirate-ship.jpg" %}"
          alt="Picture of a Pirate Ship"/>
 </div>
