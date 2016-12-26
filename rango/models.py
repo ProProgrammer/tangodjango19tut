@@ -2,10 +2,11 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.template.defaultfilters import slugify
+from constants import FieldConstants
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=128, unique=True)
+    name = models.CharField(max_length=FieldConstants.name_max_length, unique=True)
     views = models.IntegerField(default=0)
     likes = models.IntegerField(default=0)
     slug = models.SlugField(unique=True)
@@ -54,7 +55,7 @@ class Category(models.Model):
 
 class Page(models.Model):
     category = models.ForeignKey(Category)
-    title = models.CharField(max_length=128)
+    title = models.CharField(max_length=FieldConstants.title_max_length)
     url = models.URLField()
     views = models.IntegerField(default=0)
 

@@ -1,9 +1,10 @@
 from django import forms
 from rango.models import Category, Page
+from constants import FieldConstants
 
 
 class CategoryForm(forms.ModelForm):
-    name = forms.CharField(max_length=128, help_text="Please enter the category name.")
+    name = forms.CharField(max_length=FieldConstants.name_max_length, help_text="Please enter the category name.")
     views = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
     likes = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
     slug = forms.CharField(widget=forms.HiddenInput(), required=False)
@@ -12,13 +13,30 @@ class CategoryForm(forms.ModelForm):
     class Meta:
         # Provide an association between the ModelForm and a model
         model = Category
-        fields = ('name', )
+        fields = ('name',)
 
 
 class PageForm(forms.ModelForm):
-    title = forms.CharField(max_length=128, help_text="Please enter the title of the page")
+    title = forms.CharField(max_length=FieldConstants.title_max_length, help_text="Please enter the title of "
+                                                                                  "the page")
     url = forms.URLField(help_text="Please enter the URL for the page")
     views = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
+
+    def clean(self):
+        """
+        Always end the clean() method by returning the reference to cleaned_data dictionary
+        Otherwise the changes won't be applied
+        :return: cleaned_data dictionary
+        """
+        cleaned_data = self.cleaned_data
+        url = cleaned_data.get('url')
+
+        # If URL is not empty and doesn't start with 'http://', then prepend 'http://'
+        if url and not url.startswith('http://'):
+            url = 'http://' + url
+            cleaned_data['url'] = url
+
+            return cleaned_data
 
     class Meta:
         # Provide an association between the ModelForm and a model
@@ -29,8 +47,6 @@ class PageForm(forms.ModelForm):
         # Some fields may allow NULL values, so we may not want to include them
         # Here, we are hiding the foreign key
         # We can either exclude the category field from the form,
-        exclude = ('category', )
+        exclude = ('category',)
         # or specify the fields to include (i.e. not include the category field)
         # fields = ('title', 'url', 'views', )
-
-
