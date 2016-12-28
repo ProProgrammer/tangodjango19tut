@@ -8,6 +8,9 @@
     </head>
 
     <body>
-        <!-- Page specific content goes here -->
+        {% block body_block %}
+            This is body block's default content
+            <!-- It is not compulsory to have default content for the body block -->
+        {% endblock %}
     </body>
 </html>
