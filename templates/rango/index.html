@@ -1,53 +1,39 @@
-<!DOCTYPE html>
+{% extends 'rango/base.html' %}
 {% load staticfiles %}
 
-
-<html>
-
-
-<head>
-    <title>Rango</title>
-</head>
-
-
-<body>
-<h1>Rango says...</h1>
-<div>
-    hey there partner! <br/>
-    <strong>{{ boldmessage }}</strong>
-</div>
-<div>
-    <h3>Most Liked Categories</h3>
-    {% if categories %}
-    <ul>
-        {% for category in categories %}
-        <li><a href="{% url 'rango:show_category' category.slug %}">{{ category.name }}</a> -
-            {{ category.likes }}</li>
-        {% endfor %}
-    </ul>
-    {% else %}
-        <strong>There are no categories present.</strong>
-    {% endif %}
-</div>
-<div>
-    <h3>Most Viewed Pages</h3>
-    {% if pages %}
-        <ul>
-            {% for page in pages %}
-                <li><a href="{{ page.url }}">{{ page.title }}</a></li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <strong>No Pages added for any category</strong>
-    {% endif %}
-</div>
-<div>
-    <a href="{% url 'rango:add_category' %}">Add a New Category</a><br />
-    <a href="{% url 'rango:about' %}">About</a><br/>
-    <img src="{% static "images/pirate-ship.jpg" %}"
-         alt="Picture of a Pirate Ship"/>
-</div>
-</body>
-
-
-</html>
+{% block body_block %}
+    <h1>Rango says...</h1>
+    <div>
+        hey there partner! <br/>
+        <strong>{{ boldmessage }}</strong>
+    </div>
+    <div>
+        <h3>Most Liked Categories</h3>
+        {% if categories %}
+            <ul>
+                {% for category in categories %}
+                    <li><a href="{% url 'rango:show_category' category.slug %}">{{ category.name }}</a> -
+                        {{ category.likes }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <strong>There are no categories present.</strong>
+        {% endif %}
+    </div>
+    <div>
+        <h3>Most Viewed Pages</h3>
+        {% if pages %}
+            <ul>
+                {% for page in pages %}
+                    <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <strong>No Pages added for any category</strong>
+        {% endif %}
+    </div>
+    <div>
+        <img src="{% static "images/pirate-ship.jpg" %}"
+             alt="Picture of a Pirate Ship" style="height: 300px;"/>
+    </div>
+{% endblock %}
