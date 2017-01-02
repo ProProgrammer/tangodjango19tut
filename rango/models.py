@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from django.contrib.auth.models import User
 from django.db import models
 from django.template.defaultfilters import slugify
 from constants import FieldConstants
@@ -64,3 +65,33 @@ class Page(models.Model):
 
     def __unicode__(self):
         return self.title
+
+
+class UserProfile(models.Model):
+    """
+    We want to include some user related attributes in our Rango application.
+    A URLField allowing a user of Rango to specify their own website
+    An ImageField, allowing a user to specify a picture for their user profile.
+    """
+
+    # This line is required. Links UserProfile to a User model instance
+    user = models.OneToOneField(User)
+
+    # The additional attributes we wish to include.
+    # blank=True means that users do not have to necessarily supply values for these attributes.
+    website = models.URLField(blank=True)
+
+    # The value of upload_to attribute in ImageField is cojoined with the project's MEDIA_ROOT setting to provide a
+    # path with which uploaded profile images will be stored.
+    # If MEDIA_ROOT is ~/PycharmProjectvs/tango_with_django_project/media and upload_to is 'profile_images'
+    # Then the profile images will be stored in directory:
+    # ~/PycharmProjectvs/tango_with_django_project/media/profile_images/
+    picture = models.ImageField(upload_to='profile_images', blank=True)
+
+    # Override the __str__() method to return out something meaningful!
+    # For Python 2.7.x, define __unicode__ too
+    def __str__(self):
+        return self.user.username
+
+    def __unicode__(self):
+        return self.user.username
