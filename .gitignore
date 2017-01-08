@@ -1,5 +1,6 @@
 .idea/
-**/.DS_Store
-**/*.pyc
-**/*.sqlite3
-**/*.pyc
+.DS_Store
+*.pyc
+*.sqlite3
+*.pyc
+media/profile_images/
