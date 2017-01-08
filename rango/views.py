@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login
 from django.core.urlresolvers import reverse
+from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
@@ -220,11 +221,11 @@ def user_login(request):
                 return HttpResponseRedirect(reverse('rango:index'))
             else:
                 # An inactive account was used - no logging in!
-                return HttpResponseRedirect("Your Rango account is disabled.")
+                return HttpResponse("Your Rango account is disabled.")
         else:
             # Bad login details were provided. So we can't log the user in.
             print "Invalid login details: {0}, {1}".format(username, password)
-            return HttpResponseRedirect("Invalid login details supplied.")
+            return HttpResponse("Invalid login details supplied.")
 
     # This request is not a HTTP POST, so display the login form.
     # This scenario most likely be a HTTP GET.
