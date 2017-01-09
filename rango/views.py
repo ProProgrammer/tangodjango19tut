@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
@@ -232,3 +233,50 @@ def user_login(request):
     else:
         # No context variables to pass to the template system, hence the blank dictionary object
         return render(request, 'rango/login.html', {})
+
+
+@login_required
+def restricted(request):
+    return HttpResponse("Since you are logged in, you can see this text!")
+
+"""
+Methods to check if a user is authenticated:
+
+-- In the template --
+use {% if user.authenticated %}
+
+-- In the view --
+Directly examine the request object & check if user is authenticated
+
+-- Use a decorator function --
+Django provides @login_required decorator that checks if the user is authenticated
+
+---------------------
+
+The direct approach checks to see whether a user is logged in via user.is_authenticated() method.
+The user object is available via the request object passed into a view.
+
+Eg:
+
+def some_view(request):
+    if not request.user.is_authenticated():
+        return HttpResponse("You are not logged in")
+    else:
+        return HttpResponse("You are logged in")
+
+---------------------
+
+The third approach uses Python decorators.
+Django provides a decorator called login_required(), which we can attach to any view where we require the user to be
+logged in. If a user is not logged in and attempts to access a view decorated with login_required(), they are then
+redirected to another page (that we can set) - typically the login page.
+
+Eg usage:
+
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def restricted(request):
+    return HttpResponse("Since you are logged in, you can see this text!")
+"""
+
