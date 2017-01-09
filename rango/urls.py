@@ -16,6 +16,8 @@ urlpatterns = [
     url(r'^login/$', views.user_login, name='login'),
 
     url(r'^restricted/$', views.restricted, name='restricted'),
+
+    url(r'^logout/$', views.user_logout, name='logout'),
 ]
 """
 We have added a rather complex entry that will invoke view.show_category() when the URL pattern r'^category/(

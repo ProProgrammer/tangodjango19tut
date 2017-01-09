@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
@@ -280,3 +280,8 @@ def restricted(request):
     return HttpResponse("Since you are logged in, you can see this text!")
 """
 
+@login_required()
+def user_logout(request):
+    # Since we know the user is logged in, we can now just log them out
+    logout(request)
+    return HttpResponseRedirect(reverse('rango:index'))
