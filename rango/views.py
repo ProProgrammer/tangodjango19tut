@@ -10,6 +10,9 @@ from rango.models import Category, Page
 
 
 def index(request):
+    # Testing Cookie Functionality - 10.4
+    request.session.set_test_cookie()
+
     # Query the database for a list of All categories currently stored
     # Order the categories by number of likes in descending order.
     # Retrieve the top 5 categories only - or all if less than or equal to 5.
@@ -32,6 +35,11 @@ def index(request):
 
 
 def about(request):
+    # Testing cookie functionality - 10.4
+    if request.session.test_cookie_worked():
+        print("Test Cookie Worked!")
+        request.session.delete_test_cookie()
+
     context_dict = {'boldmessage': 'This tutorial has been put together by Deep Sukhwani'}
     return render(request, 'rango/about.html', context=context_dict)
 
