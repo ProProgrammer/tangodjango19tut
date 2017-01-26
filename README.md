@@ -19,3 +19,24 @@ Once session based cookie is implemented in rango/views.py, use `python manage.p
 9. Now fetch the session object again (as the session object must have changed with new incremented visits counter) and then see the value of visits as follows:
 10. `some_session = Session.objects.get(session_key='my_session_key'); some_session.get_decoded()`
 11. Don't forget to change `seconds > 0` back to `days > 0` in `visit_cookie_handler()` function.
+
+
+**10.7 - Browser-Length and Persistent Sessions**
+
+When using cookies, you can use Django's session framework to set cookies as either _browser-length sessions_ or _persistent sessions_
+
+1. browser-length session expires when a user closes their browser
+2. persistent sessions can last over several browser instances - expiring at a time of your choice. This could be half an hour or even as far as month in future.
+
+By default browser length sessions are disabled. You can enable them by modifying your Django project's `settings.py` module. Add the variable `SESSION_EXPIRE_AT_BROWSER_CLOSE`, setting it to `True`
+
+Alternativaly, persistent sessions are enabled by default, with `SESSION_EXPIRE_AT_BROWSER_CLOSE` either set to `False` or not being present in your project's `settings.py` module.
+
+Persistent sessions have an additional setting, `SESSION_COOKIE_AGE`, which allows you to specify the age for which a cookie can live. This value should be an integer, representing the number of seconds the cookie can live for.
+Eg: a value of `1209600` would mean your website's cookie expires after a two week (14-day) period.
+
+
+**10.8 Clearing the Sessions Database**
+
+1. If you database backend for Django sessions, this can be done with `python manage.py clearsessions`
+2. Should run as a Cron job to ensure app's performance doesn't degrade as we experience more and more users.
