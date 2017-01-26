@@ -1,7 +1,8 @@
+from datetime import datetime
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
@@ -10,9 +11,6 @@ from rango.models import Category, Page
 
 
 def index(request):
-    # Testing Cookie Functionality - 10.4
-    request.session.set_test_cookie()
-
     # Query the database for a list of All categories currently stored
     # Order the categories by number of likes in descending order.
     # Retrieve the top 5 categories only - or all if less than or equal to 5.
@@ -30,8 +28,14 @@ def index(request):
     context_dict = {'categories': category_list,
                     'pages': pages_list}
 
-    # Render the response and send it back!
-    return render(request, 'rango/index.html', context=context_dict)
+    # Obtain the response object early so we can add cookie information
+    response = render(request, 'rango/index.html', context_dict)
+
+    # Call function to handle the cookies
+    visitor_cookie_handler(request, response)
+
+    # Render response back to the user, udpating any cookies that need changed
+    return response
 
 
 def about(request):
@@ -299,3 +303,42 @@ def user_logout(request):
     # Since we know the user is logged in, we can now just log them out
     logout(request)
     return HttpResponseRedirect(reverse('rango:index'))
+
+
+def visitor_cookie_handler(request, response):
+    """
+    This is not a view since it doesn't return a response.
+    This is simply a helper function that will be called inside index() view
+
+    # Get the number of visits to the site.
+    # We use the COOKIES.get() function to obtain the visits cookie.
+    # If the cookie exists, the value returned is casted to an integer.
+    # If the cookie doesn't exist, then the default value of 1 is used.
+    # We than use last_visit cookie value to see the last visit datetime, if it doesn't exist we return current
+    datetime to current datetime hence set last_visit as current datetime
+    # We use last_visit_time to store last visit time
+    """
+
+    # Cookie values are returned as strings, hence casting it to an integer
+    visits = int(request.COOKIES.get('visits', 1))
+
+    # if datetime.now() is datetime.datetime(2017, 1, 26, 8, 23, 12, 849111)
+    # str(datetime.now()) will be 2017-01-26 08:23:12.849111
+    # last_visit_time will be datetime.datetime(2017, 1, 26, 8, 23, 12)
+    last_visit_cookie = request.COOKIES.get('last_visit', str(datetime.now()))
+    last_visit_time = datetime.strptime(last_visit_cookie[:-7], '%Y-%m-%d %H:%M:%S')
+
+    # If it's been more than a day since the last visit...
+    # For testing purpose, change days to seconds in next line so that the counter updates after every second and you
+    #  do not have to wait for a day to see incrementing value of visits cookie.
+    if (datetime.now() - last_visit_time).days > 0:
+        visits += 1
+        # Update the last visit cookie now that we have updated the count
+        response.set_cookie('last_visit', str(datetime.now()))
+    else:
+        visits = 1
+        # Set the last visit cookie
+        response.set_cookie('last_visit', last_visit_cookie)
+
+    # Update / set the visits cookie
+    response.set_cookie('visits', visits)
