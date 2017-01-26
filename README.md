@@ -1,4 +1,4 @@
-**10.6**
+**10.6 - Session Data - Notes**
 
 To use session based cookies you need to perform the following steps:
 
