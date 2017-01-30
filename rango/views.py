@@ -1,12 +1,10 @@
 from datetime import datetime
 
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from registration.backends.simple.views import RegistrationView
 
-from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
+from rango.forms import CategoryForm, PageForm
 from rango.models import Category, Page
 
 
@@ -356,3 +354,9 @@ def visitor_cookie_handler(request):
 
     # Update / set the visits cookie
     request.session['visits'] = visits
+
+
+# Create a new class that redirects the user to the index page if successful at logging in
+class MyRegistrationView(RegistrationView):
+    def get_success_url(self, user=None):
+        return '/rango/'
